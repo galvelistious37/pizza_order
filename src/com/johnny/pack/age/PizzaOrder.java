@@ -176,7 +176,7 @@ public class PizzaOrder extends Application {
         String msg = "";
         msg += "Customer: \n";
         msg += "\t" + txtName.getText() + "\n";
-        msg += "\t" + txtPhone.getText() + "\n";
+        msg += "\t" + getFormattedPhone() + "\n";
         msg += "\t" + txtAddress.getText() + "\n\n";
         msg += "You have ordered a " + getPizzaSize() + " ";
         msg += getCrust() + " crust ";
@@ -186,6 +186,11 @@ public class PizzaOrder extends Application {
         Alert a = new Alert(Alert.AlertType.INFORMATION, msg);
         a.setTitle("Customer Order");
         a.showAndWait();
+    }
+
+    private String getFormattedPhone() {
+        String phone = txtPhone.getText();
+        return "(" + phone.substring(0,3) + ") " + phone.substring(3,6) + "-" + phone.substring(6);
     }
 
     private String displayToppings() {
