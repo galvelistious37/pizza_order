@@ -8,7 +8,10 @@ import javafx.scene.control.*;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 
+import java.util.regex.Pattern;
+
 public class PizzaOrder extends Application {
+    private final String REGEX_PHONE = "\\(?\\d{3}\\)?\\s?-?\\d{3}-?\\s?\\d{4}";
 
     public static void main(String[] args){
         launch(args);
@@ -43,7 +46,7 @@ public class PizzaOrder extends Application {
 
         // Create address label and text box
         Label lblAddress = new Label("Address");
-        genereateAddressButton();
+        generateAddressButton();
 
         // Create size radio buttons
         ToggleGroup groupSize = new ToggleGroup();
@@ -147,7 +150,7 @@ public class PizzaOrder extends Application {
         rdoLarge.setToggleGroup(groupSize);
     }
 
-    private void genereateAddressButton() {
+    private void generateAddressButton() {
         txtAddress = new TextField();
         txtAddress.setMinWidth(100);
         txtAddress.setPrefWidth(200);
@@ -172,25 +175,51 @@ public class PizzaOrder extends Application {
     }
 
     private void btnOk_Click() {
-        // Create message string with the customer information
-        String msg = "";
-        msg += "Customer: \n";
-        msg += "\t" + txtName.getText() + "\n";
-        msg += "\t" + getFormattedPhone() + "\n";
-        msg += "\t" + txtAddress.getText() + "\n\n";
-        msg += "You have ordered a " + getPizzaSize() + " ";
-        msg += getCrust() + " crust ";
-        msg += "pizza with:\n";
-        msg += "\t" + displayToppings();
+        if(isAcceptablePhone(txtPhone.getText())){
+            // Create message string with the customer information
+            String msg = "";
+            msg += "Customer: \n";
+            msg += "\t" + txtName.getText() + "\n";
+            msg += "\t" + getFormattedPhone() + "\n";
+            msg += "\t" + txtAddress.getText() + "\n\n";
+            msg += "You have ordered a " + getPizzaSize() + " ";
+            msg += getCrust() + " crust ";
+            msg += "pizza with:\n";
+            msg += "\t" + displayToppings();
 
-        Alert a = new Alert(Alert.AlertType.INFORMATION, msg);
-        a.setTitle("Customer Order");
-        a.showAndWait();
+            Alert a = new Alert(Alert.AlertType.INFORMATION, msg);
+            a.setTitle("Customer Order");
+            a.showAndWait();
+        } else {
+            Alert b = new Alert(Alert.AlertType.ERROR, "Invalid phone number");
+            b.setTitle("Invalid Phone Format");
+            b.showAndWait();
+        }
     }
 
     private String getFormattedPhone() {
-        String phone = txtPhone.getText();
-        return "(" + phone.substring(0,3) + ") " + phone.substring(3,6) + "-" + phone.substring(6);
+        return formattedPhone(getDigitsOnly());
+    }
+
+    private String formattedPhone(String digitsOnly){
+        return "(" + digitsOnly.substring(0,3) + ") "
+                + digitsOnly.substring(3,6) + "-"
+                + digitsOnly.substring(6);
+    }
+
+    private String getDigitsOnly(){
+        StringBuilder newNumber = new StringBuilder();
+        for (int i = 0; i < txtPhone.getText().length(); i++) {
+            String oneDigit = txtPhone.getText().substring(i, i + 1);
+            if (Pattern.matches("\\d", oneDigit)) {
+                newNumber.append(oneDigit);
+            }
+        }
+        return newNumber.toString();
+    }
+
+    private boolean isAcceptablePhone(String text){
+        return Pattern.matches(REGEX_PHONE, text);
     }
 
     private String displayToppings() {
