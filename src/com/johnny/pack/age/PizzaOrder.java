@@ -10,10 +10,7 @@ import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.regex.Pattern;
 
 public class PizzaOrder extends Application {
