@@ -165,12 +165,13 @@ public class PizzaOrder extends Application {
         //---------- Create right pane --------------------//
         // Create toppings display
         toppingList = new LinkedList<>();
+        Label lblSelectHeader = new Label("You have selected:");
         lblSelectedToppings = new Label();
         lblSelectedToppings.setText("");
         showSelectedToppings();
         lblSelectedToppings.setMinWidth(150);
-        VBox paneRight = new VBox();
-        paneRight.getChildren().add(lblSelectedToppings);
+        VBox paneRight = new VBox(10);
+        paneRight.getChildren().addAll(lblSelectHeader, lblSelectedToppings);
 
         //---------- Create the bottom pane ---------------//
         Button btnOk = new Button("OK");
@@ -242,7 +243,7 @@ public class PizzaOrder extends Application {
     }
 
     private void showSelectedToppings() {
-        lblSelectedToppings.setText("You have selected: \n");
+        lblSelectedToppings.setText("");
         if(toppingList.size() > 0){
             for(String topping : toppingList){
                 String temp = lblSelectedToppings.getText();
