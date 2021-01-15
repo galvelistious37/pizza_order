@@ -10,7 +10,7 @@ import javafx.scene.layout.*;
 import javafx.scene.control.*;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-
+import java.util.LinkedList;
 import java.util.regex.Pattern;
 
 public class PizzaOrder extends Application {
@@ -46,6 +46,9 @@ public class PizzaOrder extends Application {
     private CheckBox chkOlives;
     private CheckBox chkTomatoes;
     private CheckBox chkPineapple;
+
+    private LinkedList<String> toppingList;
+    private Label lblSelectedToppings;
 
     @Override
     public void start(Stage primaryStage){
@@ -127,6 +130,18 @@ public class PizzaOrder extends Application {
         chkOlives = new CheckBox("Olives");
         chkTomatoes = new CheckBox("Tomatoes");
         chkPineapple = new CheckBox("Pineapple");
+
+        chkPepperoni.setOnAction(e -> chkBox_Clicked(chkPepperoni));
+        chkAnchovies.setOnAction(e -> chkBox_Clicked(chkAnchovies));
+        chkSausage.setOnAction(e -> chkBox_Clicked(chkSausage));
+        chkChicken.setOnAction(e -> chkBox_Clicked(chkChicken));
+        chkBacon.setOnAction(e -> chkBox_Clicked(chkBacon));
+        chkMushrooms.setOnAction(e -> chkBox_Clicked(chkMushrooms));
+        chkJalapenos.setOnAction(e -> chkBox_Clicked(chkJalapenos));
+        chkOlives.setOnAction(e -> chkBox_Clicked(chkOlives));
+        chkTomatoes.setOnAction(e -> chkBox_Clicked(chkTomatoes));
+        chkPineapple.setOnAction(e -> chkBox_Clicked(chkPineapple));
+
         FlowPane paneToppings = new FlowPane(Orientation.VERTICAL,
                 chkPepperoni, chkAnchovies, chkSausage, chkChicken,
                 chkBacon, chkMushrooms, chkJalapenos, chkOlives,
@@ -134,7 +149,7 @@ public class PizzaOrder extends Application {
         paneToppings.setPadding(new Insets(10, 0, 10, 0));
         paneToppings.setHgap(20);
         paneToppings.setVgap(10);
-        paneToppings.setPrefWrapLength(100);
+        paneToppings.setPrefWrapLength(200);
 
         VBox paneTopping = new VBox(lblToppings, paneToppings);
 
@@ -143,6 +158,17 @@ public class PizzaOrder extends Application {
         // Create the center pane
         VBox paneCenter = new VBox(20, paneCustomer, paneOrder);
         paneCenter.setPadding(new Insets(0, 10, 0, 10));
+
+        //---------- Create right pane --------------------//
+        // Create toppings display
+        toppingList = new LinkedList<>();
+        Label lblSelectHeader = new Label("You have selected:");
+        lblSelectedToppings = new Label();
+        lblSelectedToppings.setText("");
+        showSelectedToppings();
+        lblSelectedToppings.setMinWidth(150);
+        VBox paneRight = new VBox(10);
+        paneRight.getChildren().addAll(lblSelectHeader, lblSelectedToppings);
 
         //---------- Create the bottom pane ---------------//
         Button btnOk = new Button("OK");
@@ -162,10 +188,11 @@ public class PizzaOrder extends Application {
 
         //---------- Finish the scene ---------------//
         BorderPane paneMain = new BorderPane();
-        paneMain.setPrefWidth(700);
-        paneMain.setPrefHeight(200);
+        paneMain.setPrefWidth(600);
+        paneMain.setPrefHeight(420);
         paneMain.setTop(paneTop);
         paneMain.setCenter(paneCenter);
+        paneMain.setRight(paneRight);
         paneMain.setBottom(paneBottom);
 
         // Commented code uses a grid pane instead of a border pane
@@ -210,6 +237,33 @@ public class PizzaOrder extends Application {
 //        primaryStage.setMaxWidth(900);
         primaryStage.show();
 
+    }
+
+    private void showSelectedToppings() {
+        lblSelectedToppings.setText("");
+        if(toppingList.size() > 0){
+            for(String topping : toppingList){
+                String temp = lblSelectedToppings.getText();
+                temp += "\t" + topping + "\n";
+                lblSelectedToppings.setText(temp);
+            }
+        } else {
+            String temp = lblSelectedToppings.getText();
+            temp += "\tNo Toppings";
+            lblSelectedToppings.setText(temp);
+        }
+    }
+
+    private void chkBox_Clicked(CheckBox box) {
+        if(box.isSelected()){
+            toppingList.add(box.getText());
+        }
+        if(!box.isSelected()){
+            if(toppingList.contains(box.getText())){
+                toppingList.remove(box.getText());
+            }
+        }
+        showSelectedToppings();
     }
 
     private void btnOk_Click() {
